@@ -1,11 +1,10 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
-
 import java.time.LocalDate;
 
 @Entity
-public class IntegrityCase {
+public class RepeatOffenderRecord {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -14,9 +13,9 @@ public class IntegrityCase {
     @ManyToOne
     private StudentProfile studentProfile;
 
-    private String violationType;
-    private String status;
-    private LocalDate incidentDate;
+    private Integer totalCases;
+    private LocalDate lastIncidentDate;
+    private String flagSeverity;
 
     // getters & setters
 }
