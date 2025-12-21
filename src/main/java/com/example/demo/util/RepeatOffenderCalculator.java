@@ -1,17 +1,23 @@
 package com.example.demo.util;
 
-public class RepeatOffenderCalculator {
+import com.example.demo.entity.IntegrityCase;
+import org.springframework.stereotype.Component;
+import java.util.List;
 
-    /**
-     * Calculates the next repeat-offender count
-     *
-     * @param previousCount number of previous offenses
-     * @return updated offense count
-     */
-    public static int calculateNextCount(int previousCount) {
-        if (previousCount < 0) {
-            return 1;
-        }
-        return previousCount + 1;
+@Component
+public class RepeatOffenderCalculator {
+    
+    public String calculateSeverity(int totalCases) {
+        if (totalCases >= 4) return "HIGH";
+        if (totalCases == 2) return "MEDIUM";
+        return "LOW";
+    }
+    
+    public boolean isRepeatOffender(List<IntegrityCase> cases) {
+        return cases.size() >= 2;
+    }
+    
+    public int countTotalCases(List<IntegrityCase> cases) {
+        return cases.size();
     }
 }
