@@ -9,5 +9,11 @@ public class EvidenceRecord {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String details;
+    private String evidenceDetails;
+
+    public Long getId() { return id; }
+    public String getEvidenceDetails() { return evidenceDetails; }
+
+    public void setId(Long id) { this.id = id; }
+    public void setEvidenceDetails(String evidenceDetails) { this.evidenceDetails = evidenceDetails; }
 }
