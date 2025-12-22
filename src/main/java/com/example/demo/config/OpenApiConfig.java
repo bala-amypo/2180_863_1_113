@@ -15,7 +15,7 @@ public class OpenApiConfig {
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
                .servers(List.of(
-                new Server().url("https://9145.pro604cr.amypo.ai/")
+                new Server().url("https://9145.pro604cr.amypo.ai")
                ));
     }
 }
