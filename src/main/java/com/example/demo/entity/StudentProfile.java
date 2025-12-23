@@ -21,7 +21,7 @@ public class StudentProfile {
     
     private Boolean repeatOffender = false;
     
-    @Column(nullable = false)
+   @Column(nullable = false)
     private LocalDateTime createdAt;
     
     @OneToMany(mappedBy = "studentProfile")
