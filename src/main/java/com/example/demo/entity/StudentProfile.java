@@ -13,7 +13,7 @@ public class StudentProfile {
     
     private String studentId;
     private String name;
-    private String email;9
+    private String email;
     private String program;
     
     @Column(nullable = false)
