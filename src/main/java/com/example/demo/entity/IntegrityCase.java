@@ -3,6 +3,7 @@ package com.example.demo.entity;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -11,27 +12,27 @@ public class IntegrityCase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+
     @ManyToOne
-    @JoinColumn(nullable = false)
     private StudentProfile studentProfile;
-    
+
     private String courseCode;
     private String instructorName;
     private String description;
     private String status = "OPEN";
     private LocalDate incidentDate;
     private LocalDateTime createdAt;
-    
+
     @OneToMany(mappedBy = "integrityCase")
-    private List<EvidenceRecord> evidenceRecords;
-    
-    @OneToMany(mappedBy = "integrityCase")
-    private List<PenaltyAction> penaltyActions;
-    
-    public IntegrityCase() {}
-    
-    // Getters and setters
+    private List<PenaltyAction> penalties = new ArrayList<>();
+
+    @PrePersist
+    public void onCreate() {
+        this.createdAt = LocalDateTime.now();
+        if (this.status == null) this.status = "OPEN";
+    }
+
+    // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public StudentProfile getStudentProfile() { return studentProfile; }
@@ -48,8 +49,6 @@ public class IntegrityCase {
     public void setIncidentDate(LocalDate incidentDate) { this.incidentDate = incidentDate; }
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
-    public List<EvidenceRecord> getEvidenceRecords() { return evidenceRecords; }
-    public void setEvidenceRecords(List<EvidenceRecord> evidenceRecords) { this.evidenceRecords = evidenceRecords; }
-    public List<PenaltyAction> getPenaltyActions() { return penaltyActions; }
-    public void setPenaltyActions(List<PenaltyAction> penaltyActions) { this.penaltyActions = penaltyActions; }
+    public List<PenaltyAction> getPenalties() { return penalties; }
+    public void setPenalties(List<PenaltyAction> penalties) { this.penalties = penalties; }
 }

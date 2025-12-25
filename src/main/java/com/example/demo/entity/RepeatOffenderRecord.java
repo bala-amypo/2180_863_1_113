@@ -9,17 +9,15 @@ public class RepeatOffenderRecord {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+
     @ManyToOne
     private StudentProfile studentProfile;
-    
+
     private Integer totalCases;
     private LocalDate firstIncidentDate;
     private String flagSeverity;
-    
-    public RepeatOffenderRecord() {}
-    
-    // Getters and setters
+
+    // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public StudentProfile getStudentProfile() { return studentProfile; }

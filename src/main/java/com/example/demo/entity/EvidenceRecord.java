@@ -9,20 +9,23 @@ public class EvidenceRecord {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+
     @ManyToOne
     private IntegrityCase integrityCase;
-    
+
     private String evidenceType;
     private String content;
     private String submittedBy;
     
-    @Column(nullable = false)
-    private LocalDateTime submittedAt;
-    
-    public EvidenceRecord() {}
-    
-    // Getters and setters
+    // Fix: Init immediately
+    private LocalDateTime submittedAt = LocalDateTime.now();
+
+    @PrePersist
+    public void onCreate() {
+        if (this.submittedAt == null) this.submittedAt = LocalDateTime.now();
+    }
+
+    // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public IntegrityCase getIntegrityCase() { return integrityCase; }
