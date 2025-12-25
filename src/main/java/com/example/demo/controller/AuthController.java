@@ -1,4 +1,4 @@
-AuthController.javapackage com.example.demo.controller;
+package com.example.demo.controller;
 
 import com.example.demo.dto.*;
 import com.example.demo.service.AuthService;
@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/auth")
 @Tag(name = "Authentication")
 public class AuthController {
+
     private final AuthService authService;
 
     public AuthController(AuthService authService) {
