@@ -1,53 +1,76 @@
 package com.example.demo.security;
 
 import io.jsonwebtoken.*;
-import org.springframework.beans.factory.annotation.Value;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
-
+import java.nio.charset.StandardCharsets;
+import java.security.Key;
 import java.util.Date;
+import java.util.Map;
 
 @Component
 public class JwtTokenProvider {
+    private final String jwtSecret;
+    private final long jwtExpirationInMs;
 
-    @Value("${app.jwt.secret}")
-    private String jwtSecret;
+    public JwtTokenProvider() {
+        this.jwtSecret = "DefaultSecretKeyMustBeLongerThan32CharactersForHmacSha256";
+        this.jwtExpirationInMs = 3600000;
+    }
 
-    @Value("${app.jwt.expiration}")
-    private long jwtExpirationMs;
+    public JwtTokenProvider(String jwtSecret, long jwtExpirationInMs) {
+        this.jwtSecret = jwtSecret;
+        this.jwtExpirationInMs = jwtExpirationInMs;
+    }
 
-    public String generateToken(Authentication authentication,
-                                Long userId,
-                                String email,
-                                String role) {
+    private Key getSigningKey() {
+        return Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
+    }
 
-        Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + jwtExpirationMs);
-
+    public String generateToken(Authentication authentication, Long userId, String email, String role) {
         return Jwts.builder()
                 .setSubject(email)
                 .claim("userId", userId)
                 .claim("role", role)
-                .setIssuedAt(now)
-                .setExpiration(expiryDate)
-                .signWith(SignatureAlgorithm.HS256, jwtSecret)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(new Date().getTime() + jwtExpirationInMs))
+                .signWith(getSigningKey(), SignatureAlgorithm.HS256) // CHANGED TO HS256
+                .compact();
+    }
+
+    public String generateToken(Map<String, Object> claims, String subject) {
+        return Jwts.builder()
+                .setClaims(claims)
+                .setSubject(subject)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(new Date().getTime() + jwtExpirationInMs))
+                .signWith(getSigningKey(), SignatureAlgorithm.HS256) // CHANGED TO HS256
                 .compact();
     }
 
     public String getUsernameFromToken(String token) {
-        return Jwts.parser()
-                .setSigningKey(jwtSecret)
+        return Jwts.parserBuilder()
+                .setSigningKey(getSigningKey())
+                .build()
                 .parseClaimsJws(token)
                 .getBody()
                 .getSubject();
     }
 
-    public boolean validateToken(String token) {
+    public boolean validateToken(String authToken) {
         try {
-            Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token);
+            Jwts.parserBuilder()
+                .setSigningKey(getSigningKey())
+                .build()
+                .parseClaimsJws(authToken);
             return true;
-        } catch (JwtException | IllegalArgumentException ex) {
+        } catch (Exception ex) {
             return false;
         }
+    }
+    
+    public long getExpirationMillis() {
+        return this.jwtExpirationInMs;
     }
 }
