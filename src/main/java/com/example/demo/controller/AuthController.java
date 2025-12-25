@@ -1,4 +1,4 @@
-AuthController.javapackage com.example.demo.controller;
+package com.example.demo.controller;
 
 import com.example.demo.dto.*;
 import com.example.demo.service.AuthService;
