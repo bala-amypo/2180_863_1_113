@@ -1,28 +1,26 @@
 package com.example.demo.config;
 
-import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.*;
 import io.swagger.v3.oas.models.info.Info;
-import io.swagger.v3.oas.models.servers.Server;
+import io.swagger.v3.oas.models.security.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import java.util.List;
 
 @Configuration
 public class SwaggerConfig {
 
     @Bean
-    public OpenAPI customOpenAPI() {
-
-        Server server = new Server();
-        server.setUrl("https://9071.32procr.amypo.ai/");
-        server.setDescription("Production Server");
-
+    public OpenAPI openAPI() {
         return new OpenAPI()
                 .info(new Info()
                         .title("Academic Integrity Case Tracker API")
-                        .description("REST API for managing student academic integrity cases")
-                        .version("1.0.0"))
-                .servers(List.of(server));
+                        .description("API for managing student integrity cases")
+                        .version("1.0"))
+                .addSecurityItem(new SecurityRequirement().addList("Bearer Authentication"))
+                .components(new Components()
+                        .addSecuritySchemes("Bearer Authentication", new SecurityScheme()
+                                .type(SecurityScheme.Type.HTTP)
+                                .scheme("bearer")
+                                .bearerFormat("JWT")));
     }
 }
